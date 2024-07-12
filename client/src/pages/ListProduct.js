@@ -14,9 +14,16 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import { green, yellow, red } from '@mui/material/colors';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField'; // Importer TextField pour le formulaire
 
 function ListProducts() {
     const [products, setProducts] = useState([]);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -31,6 +38,21 @@ function ListProducts() {
         fetchProducts();
     }, []);
 
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        // Ajouter la logique pour soumettre le formulaire
+        console.log('Form submitted');
+        handleClose();
+    };
+
     return (
         <Container>
             <Box mt={4}>
@@ -39,7 +61,7 @@ function ListProducts() {
                 </Typography>
             </Box>
             <Box display="flex" justifyContent="flex-end" mb={2}>
-                <Fab style={{ backgroundColor: green[500], color: 'white' }} aria-label="add">
+                <Fab style={{ backgroundColor: green[500], color: 'white' }} aria-label="add" onClick={handleClickOpen}>
                     <AddIcon />
                 </Fab>
             </Box>
@@ -51,19 +73,19 @@ function ListProducts() {
                                 <React.Fragment>
                                     <Typography variant="h6">{product.name}</Typography>
                                     <Typography variant="body2" color="textSecondary">
-                                        Type : {product.type}
+                                        Type: {product.type}
                                     </Typography>
                                     <Typography variant="body2" color="textSecondary">
-                                        Price : ${product.price}
+                                        Price: ${product.price}
                                     </Typography>
                                     <Typography variant="body2" color="textSecondary">
-                                        Rating : {product.rating}
+                                        Rating: {product.rating}
                                     </Typography>
                                     <Typography variant="body2" color="textSecondary">
-                                        Warranty : {product.warranty_years} years
+                                        Warranty: {product.warranty_years} years
                                     </Typography>
                                     <Typography variant="body2" color="textSecondary">
-                                        Available : {product.available ? 'Yes' : 'No'}
+                                        Available: {product.available ? 'Yes' : 'No'}
                                     </Typography>
                                 </React.Fragment>
                             }
@@ -79,6 +101,71 @@ function ListProducts() {
                     </ListItem>
                 ))}
             </List>
+
+            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">Add Product</DialogTitle>
+                <DialogContent>
+                    <form id="add-product-form" onSubmit={handleSubmit}>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Product Name"
+                            type="text"
+                            fullWidth
+                            required
+                        />
+                        <TextField
+                            margin="dense"
+                            id="type"
+                            label="Product Type"
+                            type="text"
+                            fullWidth
+                            required
+                        />
+                        <TextField
+                            margin="dense"
+                            id="price"
+                            label="Product Price"
+                            type="number"
+                            fullWidth
+                            required
+                        />
+                        <TextField
+                            margin="dense"
+                            id="rating"
+                            label="Product Rating"
+                            type="number"
+                            fullWidth
+                            required
+                        />
+                        <TextField
+                            margin="dense"
+                            id="warranty"
+                            label="Warranty Years"
+                            type="number"
+                            fullWidth
+                            required
+                        />
+                        <TextField
+                            margin="dense"
+                            id="available"
+                            label="Available"
+                            type="text"
+                            fullWidth
+                            required
+                        />
+                    </form>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button form="add-product-form" type="submit" color="primary">
+                        Add
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Container>
     );
 }
