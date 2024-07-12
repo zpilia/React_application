@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Product = require('./models/productModel');
+const Product = require('./server/models/productModel');
 require('dotenv').config();
 
 const products = [
@@ -9,10 +9,7 @@ const products = [
     { "_id": 4, "name": "AC4 Phone4", "type": "phone", "price": 50.20, "rating": 3, "warranty_years": 2, "available": true }
 ];
 
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
+mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log('MongoDB connected...');
         return Product.insertMany(products);

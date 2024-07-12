@@ -13,7 +13,9 @@
   "description": "Création d'une application web avec ReactJS avec une API REST en Node.js/Express lié à une base de données MongoDB",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/server.js",
+    "seed": "node seed.js"
   },
   "keywords": [],
   "author": "",
