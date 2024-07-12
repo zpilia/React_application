@@ -9,7 +9,7 @@ const setupProductSocket = require('./sockets/productSocket');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 connectDB().then(r => console.log(r)).catch(e => console.log(e));
 
