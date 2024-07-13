@@ -33,6 +33,7 @@ function ListProducts() {
         available: ''
     });
     const [isEditing, setIsEditing] = useState(false);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -58,6 +59,7 @@ function ListProducts() {
             available: ''
         });
         setIsEditing(false);
+        setError('');
         setOpen(true);
     };
 
@@ -72,6 +74,7 @@ function ListProducts() {
             available: product.available ? 'Yes' : 'No'
         });
         setIsEditing(true);
+        setError('');
         setOpen(true);
     };
 
@@ -89,6 +92,19 @@ function ListProducts() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setError('');
+
+        // Vérification de l'unicité de l'ID côté client
+        if (!isEditing && products.some(product => product._id === Number(formValues._id))) {
+            setError('ID already exists. Please choose a different ID.');
+            return;
+        }
+
+        if (isEditing && products.some(product => product._id === Number(formValues._id) && product._id !== Number(formValues._id))) {
+            setError('ID already exists. Please choose a different ID.');
+            return;
+        }
+
         try {
             const newProduct = {
                 _id: Number(formValues._id),
@@ -189,6 +205,7 @@ function ListProducts() {
                             value={formValues._id}
                             onChange={handleChange}
                             required
+                            disabled={isEditing} // Empêche la modification de l'ID lors de l'édition
                         />
                         <TextField
                             margin="dense"
@@ -251,6 +268,7 @@ function ListProducts() {
                             required
                         />
                     </form>
+                    {error && <Typography color="error">{error}</Typography>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

@@ -22,8 +22,13 @@ exports.getProduct = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
-    const product = new Product(req.body);
     try {
+        const existingProduct = await Product.findById(req.body._id);
+        if (existingProduct) {
+            return res.status(400).json({ message: 'Product with this ID already exists' });
+        }
+
+        const product = new Product(req.body);
         const newProduct = await product.save();
         res.status(201).json(newProduct);
     } catch (err) {
@@ -33,6 +38,11 @@ exports.createProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
     try {
+        const existingProduct = await Product.findOne({ _id: req.body._id });
+        if (existingProduct && existingProduct._id.toString() !== req.params.id) {
+            return res.status(400).json({ message: 'Product with this ID already exists' });
+        }
+
         const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (product == null) {
             return res.status(404).json({ message: 'Product not found' });
