@@ -20,6 +20,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Alert from '@mui/lab/Alert';
+import useAlert from "../hooks/useAlert";
 
 function ListProducts() {
     const dispatch = useDispatch();
@@ -36,7 +38,8 @@ function ListProducts() {
         available: ''
     });
     const [isEditing, setIsEditing] = useState(false);
-    const [error, setError] = useState('');
+    const [error, setError] = useAlert('', 5000);
+    const [success, setSuccess] = useAlert('', 5000);
 
     useEffect(() => {
         if (productStatus === 'idle') {
@@ -56,6 +59,7 @@ function ListProducts() {
         });
         setIsEditing(false);
         setError('');
+        setSuccess('');
         setOpen(true);
     };
 
@@ -71,6 +75,7 @@ function ListProducts() {
         });
         setIsEditing(true);
         setError('');
+        setSuccess('');
         setOpen(true);
     };
 
@@ -89,8 +94,8 @@ function ListProducts() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         setError('');
+        setSuccess('');
 
-        // Vérification de l'unicité de l'ID côté client
         if (!isEditing && products.some(product => product._id === Number(formValues._id))) {
             setError('ID already exists. Please choose a different ID.');
             return;
@@ -114,20 +119,27 @@ function ListProducts() {
         try {
             if (isEditing) {
                 await dispatch(updateProduct(newProduct));
+                setSuccess('Product updated successfully.');
             } else {
                 await dispatch(addProduct(newProduct));
+                setSuccess('Product added successfully.');
             }
             handleClose();
         } catch (error) {
+            setError('An error occurred while saving the product. Please try again.');
             console.error("Error adding product:", error);
-            console.error("Response data:", error.response.data);
         }
     };
 
     const handleDelete = async (id) => {
+        setError('');
+        setSuccess('');
+
         try {
             await dispatch(deleteProduct(id));
+            setSuccess('Product deleted successfully.');
         } catch (error) {
+            setError('An error occurred while deleting the product. Please try again.');
             console.error("Error deleting product:", error);
         }
     };
@@ -138,6 +150,10 @@ function ListProducts() {
                 <Typography variant="h2" gutterBottom>
                     Liste des produits
                 </Typography>
+            </Box>
+            <Box mb={2}>
+                {error && <Alert severity="error" onClose={() => setError('')}>{error}</Alert>}
+                {success && <Alert severity="success" onClose={() => setSuccess('')}>{success}</Alert>}
             </Box>
             <Box display="flex" justifyContent="flex-end" mb={2}>
                 <Fab style={{ backgroundColor: green[500], color: 'white' }} aria-label="add" onClick={handleClickOpen}>
@@ -195,7 +211,7 @@ function ListProducts() {
                             value={formValues._id}
                             onChange={handleChange}
                             required
-                            disabled={isEditing} // Empêche la modification de l'ID lors de l'édition
+                            disabled={isEditing}
                         />
                         <TextField
                             margin="dense"
@@ -258,7 +274,6 @@ function ListProducts() {
                             required
                         />
                     </form>
-                    {error && <Typography color="error">{error}</Typography>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
