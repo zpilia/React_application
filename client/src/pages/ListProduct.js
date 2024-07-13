@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchProducts, addProduct, updateProduct, deleteProduct } from '../slices/productsSlice';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
@@ -21,7 +22,9 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
 function ListProducts() {
-    const [products, setProducts] = useState([]);
+    const dispatch = useDispatch();
+    const products = useSelector((state) => state.products.items);
+    const productStatus = useSelector((state) => state.products.status);
     const [open, setOpen] = useState(false);
     const [formValues, setFormValues] = useState({
         _id: '',
@@ -36,17 +39,10 @@ function ListProducts() {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const response = await axios.get('http://localhost:4000/products');
-                setProducts(response.data);
-            } catch (error) {
-                console.error("Error fetching products:", error);
-            }
-        };
-
-        fetchProducts();
-    }, []);
+        if (productStatus === 'idle') {
+            dispatch(fetchProducts());
+        }
+    }, [productStatus, dispatch]);
 
     const handleClickOpen = () => {
         setFormValues({
@@ -105,26 +101,21 @@ function ListProducts() {
             return;
         }
 
+        const newProduct = {
+            _id: Number(formValues._id),
+            name: formValues.name,
+            type: formValues.type,
+            price: Number(formValues.price),
+            rating: Number(formValues.rating),
+            warranty_years: Number(formValues.warranty_years),
+            available: formValues.available.toLowerCase() === 'yes'
+        };
+
         try {
-            const newProduct = {
-                _id: Number(formValues._id),
-                name: formValues.name,
-                type: formValues.type,
-                price: Number(formValues.price),
-                rating: Number(formValues.rating),
-                warranty_years: Number(formValues.warranty_years),
-                available: formValues.available.toLowerCase() === 'yes'
-            };
             if (isEditing) {
-                await axios.put(`http://localhost:4000/products/${formValues._id}`, newProduct);
-                setProducts((prevProducts) =>
-                    prevProducts.map((product) =>
-                        product._id === newProduct._id ? newProduct : product
-                    )
-                );
+                await dispatch(updateProduct(newProduct));
             } else {
-                const response = await axios.post('http://localhost:4000/products', newProduct);
-                setProducts((prevProducts) => [...prevProducts, response.data]);
+                await dispatch(addProduct(newProduct));
             }
             handleClose();
         } catch (error) {
@@ -135,8 +126,7 @@ function ListProducts() {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:4000/products/${id}`);
-            setProducts((prevProducts) => prevProducts.filter(product => product._id !== id));
+            await dispatch(deleteProduct(id));
         } catch (error) {
             console.error("Error deleting product:", error);
         }
