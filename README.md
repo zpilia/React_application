@@ -1,131 +1,255 @@
-# Application de gestion de produits en React
+# 🛒 Product Management App – Application de gestion de produits
 
-## Description
+**Product Management App** est une application web développée en **React**, **Node.js**, **Express**, et **MongoDB**.  
+Elle permet aux utilisateurs de gérer un catalogue de produits via une interface ergonomique et moderne intégrant **Material-UI** et **Redux**.
 
-Il s'agit d'une application de gestion de produits basée sur React qui permet aux utilisateurs de consulter, ajouter, modifier et supprimer des produits. L'application utilise Redux pour la gestion de l'état et Material-UI pour le design. L'API backend est construite avec Express et MongoDB.
+---
 
-## Fonctionnalités
+## 📌 Objectif
 
-- Consulter une liste de produits
-- Ajouter un nouveau produit
-- Modifier un produit existant
-- Supprimer un produit
-- Alertes pour les messages de succès et d'erreur
+Fournir un outil complet de gestion produit permettant :
+- De **consulter** un inventaire de produits
+- D’**ajouter**, **modifier** ou **supprimer** des fiches produits
+- D’**organiser** les données produits via un back-office intuitif
+- De bénéficier d’une **expérience en temps réel** (optionnelle) grâce à **Socket.IO**
 
-## Technologies Utilisées
+---
 
-- React
-- Material-UI
-- Axios
-- Express
-- MongoDB
-- WebSocket (Socket.IO) [Bonus]
-- Redux [Bonus]
-- 
-## Configuration du Projet
+## 🧩 Fonctionnalités
 
-### Prérequis
+### 🛠️ Espace Administrateur
 
-Assurez-vous d'avoir les éléments suivants installés sur votre machine :
+- 👁️ **Consultation** :
+    - Liste complète des produits
+    - Détails d’un produit individuel
 
-- Node.js (v14.x ou version ultérieure)
-- npm (v6.x ou version ultérieure)
-- MongoDB (exécuté localement ou instance cloud)
+- ➕ **Ajout** :
+    - Formulaire de création avec validation
+    - Champs : nom, prix, stock, image, etc.
 
-### Installation
+- ✏️ **Modification** :
+    - Formulaire pré-rempli pour édition rapide
 
-1. **Cloner le dépôt :**
-    ```sh
-    git clone https://github.com/votre-nom-utilisateur/votre-nom-depot.git
-    cd votre-nom-depot
-    ```
+- ❌ **Suppression** :
+    - Action sécurisée avec confirmation
+    - Mise à jour automatique de l’interface
 
-2. **Installer les dépendances pour le client :**
-    ```sh
-    cd client
-    npm install
-    ```
+- ⚠️ **Alertes & UX** :
+    - Utilisation des **Snackbars (Material-UI)**
+    - Retours visuels en cas de succès ou d’erreur
 
-3. **Installer les dépendances pour le serveur :**
-    ```sh
-    cd ../server
-    npm install
-    ```
+- 🔄 **Bonus** :
+    - **Redux Toolkit** pour la gestion d’état
+    - **Socket.IO** pour des mises à jour en temps réel (optionnel)
 
-### Exécution de l'Application
+---
 
-1. **Démarrer le serveur MongoDB :**
-   Assurez-vous que votre serveur MongoDB est en cours d'exécution. Si vous utilisez une instance locale, vous pouvez le démarrer avec :
-    ```sh
-    mongod
-    ```
+## 🛠️ Technologies Utilisées
 
-2. **Démarrer le serveur :**
-    ```sh
-    cd server
-    npm start
-    ```
+| Catégorie | Technologies |
+|----------|--------------|
+| Frontend | React, Redux Toolkit, Material-UI, Axios |
+| Backend | Node.js, Express |
+| Base de données | MongoDB |
+| Temps réel (option) | Socket.IO |
+| Outils | ESLint, npm |
 
-3. **Démarrer le client :**
-   Ouvrez un nouveau terminal et naviguez jusqu'au répertoire client, puis démarrez le client :
-    ```sh
-    cd client
-    npm start
-    ```
+---
 
-L'application devrait maintenant être accessible à l'adresse `http://localhost:3000`.
+## 🗂️ Architecture du Projet
 
-### Commandes Importantes
+```
+product-management-app/
+├── client/
+│   └── src/
+│       ├── components/
+│       ├── slices/
+│       ├── store.js
+│       ├── theme.js
+│       └── App.js
+├── server/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── sockets/
+│   └── server.js
+└── README.md
+```
 
-#### Client
+---
 
-- **Installer les dépendances :**
-    ```sh
-    npm install
-    ```
+## 🚀 Lancement
 
-- **Démarrer le client :**
-    ```sh
-    npm start
-    ```
+1. Cloner le projet :
+```bash
+git clone https://github.com/<username>/product-management-app.git
+cd product-management-app
+```
 
-- **Construire le client pour la production :**
-    ```sh
-    npm run build
-    ```
+2. Installer les dépendances :
+```bash
+cd client && npm install
+cd ../server && npm install
+```
 
-#### Serveur
+3. Lancer MongoDB :
+```bash
+mongod
+```
 
-- **Installer les dépendances :**
-    ```sh
-    npm install
-    ```
+4. Démarrer les serveurs :
+```bash
+# Backend
+cd server
+npm start
 
-- **Démarrer le serveur :**
-    ```sh
-    npm start
-    ```
+# Frontend (dans un autre terminal)
+cd client
+npm start
+```
 
-### Configuration de Redux
+Accès à l’application sur **http://localhost:3000**
 
-Ce projet utilise Redux pour la gestion de l'état. Le store Redux est configuré dans `src/store.js` et les slices sont situées dans `src/slices`.
+---
 
-### Configuration de Material-UI
+## 📡 API – Principaux Endpoints
 
-Ce projet utilise Material-UI pour le design. La configuration du thème est située dans `src/theme`.
+| Méthode | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /products | Récupère tous les produits |
+| GET | /products/:id | Récupère un produit spécifique |
+| POST | /products | Crée un nouveau produit |
+| PUT | /products/:id | Met à jour un produit |
+| DELETE | /products/:id | Supprime un produit |
 
-### Configuration de WebSocket
+---
 
-Le projet utilise Socket.IO pour les mises à jour en temps réel. Le serveur WebSocket est configuré dans `server/sockets/productSocket.js`.
+## 🖼️ Aperçu
 
-### Endpoints de l'API
+<p align="center"><img src="./assets/" width="900"/></p>
 
-- **GET /products** - Récupérer tous les produits
-- **GET /products/:id** - Récupérer un produit par ID
-- **POST /products** - Créer un nouveau produit
-- **PUT /products/:id** - Mettre à jour un produit par ID
-- **DELETE /products/:id** - Supprimer un produit par ID
+---
 
-### Configuration d'ESLint
+## 🤝 Auteur
 
-Ce projet utilise ESLint pour appliquer les normes de codage. Le fichier de configuration se trouve à la racine du projet.
+Développé par [zpilia](https://github.com/zpilia)  
+Réalisé dans le cadre d’un **test technique pour une alternance**, durant la formation **Web@cadémie**.
+
+---
+
+## 🪪 Licence
+
+© zpilia — Tous droits réservés.  
+L’usage, la reproduction ou la distribution sont soumis à autorisation.
+
+---
+
+# 🇬🇧 English Version
+
+# 🛒 Product Management App – Inventory Web Platform
+
+**Product Management App** is a modern full-stack web application built with **React**, **Node.js**, **Express**, and **MongoDB**.  
+It allows users to browse, create, update, and delete products through a clean admin interface using **Material-UI** and **Redux Toolkit**.
+
+---
+
+## 📌 Objective
+
+Provide companies with a full-featured product management interface to:
+- Manage product data
+- Validate user input
+- Track inventory
+- Provide real-time sync (optional)
+
+---
+
+## 🧩 Features
+
+### 🛠️ Admin Panel
+
+- 👁️ **View** products list and details
+- ➕ **Add** new items with form validation
+- ✏️ **Edit** products via prefilled forms
+- ❌ **Delete** items with confirmation
+- ⚠️ **UX feedback** using Material-UI Snackbars
+- 🔄 Optional real-time updates with Socket.IO
+
+---
+
+## 🛠️ Tech Stack
+
+| Category | Technologies |
+|----------|--------------|
+| Frontend | React, Redux Toolkit, Material-UI |
+| Backend | Node.js, Express |
+| Database | MongoDB |
+| Realtime | Socket.IO (optional) |
+
+---
+
+## 🗂️ Project Structure
+
+```
+product-management-app/
+├── client/
+│   └── src/
+│       ├── components/
+│       ├── slices/
+│       ├── store.js
+│       └── App.js
+├── server/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   └── server.js
+└── README.md
+```
+
+---
+
+## 🚀 Getting Started
+
+1. Clone the project:
+```bash
+git clone https://github.com/<username>/product-management-app.git
+cd product-management-app
+```
+
+2. Install dependencies:
+```bash
+cd client && npm install
+cd ../server && npm install
+```
+
+3. Start MongoDB:
+```bash
+mongod
+```
+
+4. Run the servers:
+```bash
+cd server && npm start
+cd ../client && npm start
+```
+
+---
+
+## 🖼️ Preview
+
+<p align="center"><img src="./assets/pm_1.png" width="900"/></p>
+<p align="center"><img src="./assets/pm_2.png" width="900"/></p>
+<p align="center"><img src="./assets/pm_3.png" width="900"/></p>
+
+---
+
+## 👤 Developed by
+
+Developed by [zpilia](https://github.com/zpilia)  
+Created as part of a **technical test for an internship** during the **Web@cadémie** training program.
+
+---
+
+## 🪪 License
+
+© zpilia — All rights reserved.  
+Use, reproduction or distribution requires authorization.
